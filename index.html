@@ -99,12 +99,20 @@
       overflow: hidden;
       font-size: 14px;
       font-weight: 300;
+      /* Mobile Optimization */
+      overscroll-behavior: none;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
 
     /* --- Layout / Scene --- */
     .scene {
       width: 100vw;
       height: 100vh;
+      /* Subtract safe areas from height to fit perfectly */
+      height: 100dvh; 
       display: flex;
       align-items: center;
       justify-content: center;
