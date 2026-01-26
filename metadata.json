@@ -1,0 +1,7 @@
+{
+  "name": "the syllabus",
+  "description": "A high-vibrancy, modern esoteric toolset and resource hub featuring AI-powered tarot readings, numerology, and occult wisdom, styled with bold geometric patterns and neon aesthetics.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
