@@ -70,8 +70,8 @@ const AstroMapTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="w-full lg:w-[400px] h-1/3 lg:h-full bg-white z-[900] overflow-y-auto flex flex-col shadow-2xl">
           <div className="p-8 space-y-8 flex-grow">
             <header className="space-y-2">
-               <h2 className="heading-marker text-5xl text-marker-black lowercase"><GlossaryTerm word="Astrocartography">Relocation</GlossaryTerm> Mapper</h2>
-               <p className="handwritten text-sm text-marker-black opacity-60 uppercase tracking-widest">Global Angularity Finder</p>
+               <h2 className="heading-marker text-6xl text-marker-black lowercase"><GlossaryTerm word="Astrocartography">Relocation</GlossaryTerm> Mapper</h2>
+               <p className="handwritten text-lg text-marker-black opacity-60 uppercase tracking-widest">Global Angularity Finder</p>
             </header>
 
             <div className="space-y-4 p-4 bg-slate-50 border border-slate-200 rounded-lg">
@@ -112,12 +112,12 @@ const AstroMapTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                      {analysis.angles.length > 0 ? (
                        analysis.angles.map((a: any, i: number) => (
                          <div key={i} className="flex items-center gap-2">
-                            <span className="heading-marker text-4xl text-marker-black">{a.planet}</span>
+                            <span className="heading-marker text-3xl text-marker-black">{a.planet}</span>
                             <span className="handwritten text-lg font-bold text-marker-black/50">on the {a.angle}</span>
                          </div>
                        ))
                      ) : (
-                       <div className="heading-marker text-2xl text-marker-black">{analysis.dominantInfluence}</div>
+                       <div className="heading-marker text-xl text-marker-black">{analysis.dominantInfluence}</div>
                      )}
                   </div>
 

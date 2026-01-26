@@ -38,7 +38,7 @@ const CosmicMadLibs: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <input 
                   type="text" 
                   placeholder={`[${key.toUpperCase()}]`}
-                  className="w-full p-5 text-marker-black text-xl shadow-sm italic"
+                  className="w-full p-5 text-marker-black text-2xl shadow-sm italic"
                   value={(inputs as any)[key]}
                   onChange={(e) => setInputs({...inputs, [key]: e.target.value})}
                 />
@@ -47,7 +47,7 @@ const CosmicMadLibs: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <button 
               onClick={handleSubmit} 
               disabled={loading} 
-              className="brutalist-button w-full !py-6 mt-6"
+              className="brutalist-button w-full !py-8 !text-2xl mt-6"
             >
               {loading ? 'Creating Ritual...' : 'Generate Workshop'}
             </button>
@@ -73,7 +73,7 @@ const CosmicMadLibs: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                </div>
                <div className="p-10 marker-border border-marker-black bg-white/40 shadow-2xl">
                  <div className="handwritten text-xs font-bold uppercase tracking-widest border-b-2 border-marker-black/10 pb-2 mb-4">Final <GlossaryTerm word="Revelation">Revelation</GlossaryTerm></div>
-                 <p className="heading-marker text-4xl text-marker-black leading-tight lowercase">"{ritual.revelation}"</p>
+                 <p className="heading-marker text-3xl text-marker-black leading-tight lowercase">"{ritual.revelation}"</p>
                </div>
              </div>
            ) : (

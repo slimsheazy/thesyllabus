@@ -39,7 +39,7 @@ const FlyingStarTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="flex-1 w-full space-y-12">
            <header className="space-y-2">
              <h2 className="heading-marker text-6xl text-marker-teal lowercase"><GlossaryTerm word="Flying Star">Flying Star</GlossaryTerm></h2>
-             <p className="handwritten text-xl text-marker-teal opacity-60">Spatial <GlossaryTerm word="Feng Shui">Feng Shui</GlossaryTerm></p>
+             <p className="handwritten text-lg text-marker-teal opacity-60">Spatial <GlossaryTerm word="Feng Shui">Feng Shui</GlossaryTerm></p>
            </header>
            
            <div className="space-y-12">
@@ -69,7 +69,7 @@ const FlyingStarTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   onChange={(e) => setDegree(parseInt(e.target.value))}
                 />
                <div className="flex justify-between items-end">
-                 <div className="heading-marker text-6xl md:text-7xl text-marker-black">{degree}°</div>
+                 <div className="heading-marker text-6xl text-marker-black">{degree}°</div>
                  <div className="handwritten text-xl text-marker-black/30 italic uppercase">Alignment</div>
                </div>
              </div>
@@ -103,7 +103,7 @@ const FlyingStarTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                      <div key={i} className="marker-border border-marker-black bg-white/40 p-2 md:p-4 aspect-square flex flex-col justify-between items-center text-center group hover:border-marker-blue transition-all">
                         <span className="handwritten text-xs md:text-sm text-marker-black/30 uppercase tracking-widest italic">{p.direction}</span>
                         <div className="relative flex items-center justify-center w-full h-full">
-                           <div className="text-4xl md:text-6xl heading-marker text-marker-black leading-none group-hover:scale-110 transition-transform">{p.baseStar}</div>
+                           <div className="text-4xl md:text-5xl heading-marker text-marker-black leading-none group-hover:scale-110 transition-transform">{p.baseStar}</div>
                            <div className="absolute -top-1 -right-1 heading-marker text-marker-red text-sm md:text-base">{p.mountainStar}</div>
                            <div className="absolute -bottom-1 -left-1 heading-marker text-marker-blue text-sm md:text-base">{p.waterStar}</div>
                         </div>
@@ -127,7 +127,7 @@ const FlyingStarTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="p-8 marker-border border-marker-black/5 bg-white/40 space-y-4">
                      <div className="handwritten text-sm text-marker-black opacity-40 uppercase tracking-widest italic">Overview</div>
-                     <p className="handwritten text-2xl text-marker-black/80 italic leading-relaxed">"{result.energyFlowSummary}"</p>
+                     <p className="handwritten text-xl text-marker-black/80 italic leading-relaxed">"{result.energyFlowSummary}"</p>
                   </div>
                   <div className="p-8 marker-border border-marker-black/5 bg-white/40 space-y-4">
                      <div className="handwritten text-sm text-marker-black opacity-40 uppercase tracking-widest italic">Spatial Logic</div>

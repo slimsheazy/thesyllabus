@@ -228,6 +228,8 @@ const BirthChartTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       setChartData(result);
       await logCalculation('NATAL_ENGINE', `${inputs.date} ${inputs.time}`, result);
       recordCalculation();
+    } else {
+      alert("Chart generation failed. The cosmic connection was interrupted. Please try again.");
     }
     setLoading(false);
   };
@@ -245,8 +247,8 @@ const BirthChartTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         {/* LEFT COLUMN: Controls */}
         <div className="w-full xl:w-[450px] space-y-12 xl:sticky xl:top-20 z-10">
            <header className="space-y-2">
-             <h2 className="heading-marker text-8xl text-marker-black lowercase leading-none"><GlossaryTerm word="Natal Chart">Natal</GlossaryTerm> Engine</h2>
-             <p className="handwritten text-xl text-marker-black opacity-60 font-bold uppercase tracking-widest">Constructing the Self</p>
+             <h2 className="heading-marker text-6xl text-marker-black lowercase leading-none"><GlossaryTerm word="Natal Chart">Natal</GlossaryTerm> Engine</h2>
+             <p className="handwritten text-lg text-marker-black opacity-60 font-bold uppercase tracking-widest">Constructing the Self</p>
              <div className="w-full h-px bg-marker-black/20 mt-4"></div>
            </header>
 
@@ -258,7 +260,7 @@ const BirthChartTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       type="date"
                       value={inputs.date}
                       onChange={e => setInputs({...inputs, date: e.target.value})}
-                      className="w-full p-4 marker-border bg-white/50 text-xl font-mono text-marker-black focus:border-marker-blue outline-none"
+                      className="w-full p-4 marker-border bg-white/50 text-2xl font-mono text-marker-black focus:border-marker-blue outline-none"
                     />
                  </div>
                  <div className="space-y-2">
@@ -267,7 +269,7 @@ const BirthChartTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       type="time"
                       value={inputs.time}
                       onChange={e => setInputs({...inputs, time: e.target.value})}
-                      className="w-full p-4 marker-border bg-white/50 text-xl font-mono text-marker-black focus:border-marker-blue outline-none"
+                      className="w-full p-4 marker-border bg-white/50 text-2xl font-mono text-marker-black focus:border-marker-blue outline-none"
                     />
                  </div>
               </div>
@@ -296,13 +298,13 @@ const BirthChartTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     type="number" placeholder="Lat" step="0.0001"
                     value={inputs.lat}
                     onChange={e => setInputs({...inputs, lat: e.target.value})}
-                    className="w-full p-4 marker-border bg-white/50 text-lg font-mono text-marker-black focus:border-marker-blue outline-none"
+                    className="w-full p-4 marker-border bg-white/50 text-2xl font-mono text-marker-black focus:border-marker-blue outline-none"
                   />
                   <input 
                     type="number" placeholder="Lng" step="0.0001"
                     value={inputs.lng}
                     onChange={e => setInputs({...inputs, lng: e.target.value})}
-                    className="w-full p-4 marker-border bg-white/50 text-lg font-mono text-marker-black focus:border-marker-blue outline-none"
+                    className="w-full p-4 marker-border bg-white/50 text-2xl font-mono text-marker-black focus:border-marker-blue outline-none"
                   />
                 </div>
               </div>

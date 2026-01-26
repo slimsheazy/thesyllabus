@@ -35,12 +35,13 @@ const CITIES = [
 ];
 
 const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }> = ({ ascendant, planets, aspects }) => {
-  const size = 320;
+  const size = 340;
   const center = size / 2;
-  const radius = size * 0.35;
+  const radius = size * 0.4;
 
   const getPos = (degree: number, rOffset: number = 0) => {
-    const angle = (degree - ascendant) * (Math.PI / 180);
+    // Add Math.PI (180 degrees) to rotate 0 position from 3 o'clock (Right) to 9 o'clock (Left)
+    const angle = ((degree - ascendant) * (Math.PI / 180)) + Math.PI;
     return {
       x: center + (radius + rOffset) * Math.cos(angle),
       y: center + (radius + rOffset) * Math.sin(angle)
@@ -48,49 +49,76 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
   };
 
   return (
-    <div className="relative w-full flex items-center justify-center p-4">
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="overflow-visible">
-        {/* Outer Circle */}
+    <div className="relative w-full max-w-[360px] aspect-square flex items-center justify-center p-4">
+      <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${size} ${size}`}>
+        {/* Outer Ring */}
         <circle 
-          cx={center} cy={center} r={radius + 10} 
-          fill="none" 
-          stroke="var(--marker-black)" 
-          strokeWidth="2" 
-          strokeDasharray="6,4" 
-          opacity="0.4" 
+          cx={center} cy={center} r={radius} 
+          fill="none" stroke="var(--marker-black)" 
+          strokeWidth="4" strokeDasharray="8,4" 
+          opacity="0.5" 
         />
         
-        {/* The "messy" marker lines crossing center */}
-        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
-          const rad = (angle - ascendant) * (Math.PI / 180);
-          const x2 = center + (radius + 15) * Math.cos(rad);
-          const y2 = center + (radius + 15) * Math.sin(rad);
+        {/* Aspect Lines */}
+        {aspects && aspects.map((asp, idx) => {
+          const p1Data = planets.find(p => p.name === asp.p1);
+          const p2Data = planets.find(p => p.name === asp.p2);
+          if (!p1Data || !p2Data) return null;
+          const pos1 = getPos(p1Data.degree, -10);
+          const pos2 = getPos(p2Data.degree, -10);
+          
+          const colors: Record<string, string> = {
+            'Conjunction': 'var(--marker-purple)',
+            'Opposition': 'var(--marker-red)',
+            'Square': 'var(--marker-red)',
+            'Trine': 'var(--marker-blue)',
+            'Sextile': 'var(--marker-teal)'
+          };
+          
+          return (
+            <line 
+              key={idx}
+              x1={pos1.x} y1={pos1.y}
+              x2={pos2.x} y2={pos2.y}
+              stroke={colors[asp.type] || 'var(--marker-black)'}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              opacity="0.6"
+              className="animate-in fade-in duration-1000"
+            />
+          );
+        })}
+
+        {/* House Cusps */}
+        {[...Array(12)].map((_, i) => {
+          const angle = ((i * 30 - ascendant) * (Math.PI / 180)) + Math.PI;
+          const x2 = center + radius * Math.cos(angle);
+          const y2 = center + radius * Math.sin(angle);
           return (
             <line 
               key={i} 
               x1={center} y1={center} x2={x2} y2={y2} 
-              stroke="var(--marker-blue)" 
-              strokeWidth="3"
-              strokeLinecap="round"
-              opacity="0.6"
+              stroke={i % 3 === 0 ? "var(--marker-blue)" : "var(--marker-black)"} 
+              strokeWidth={i % 3 === 0 ? "4" : "1.5"}
+              opacity={i % 3 === 0 ? "0.6" : "0.2"}
             />
           );
         })}
 
         {/* House Numbers */}
         {[...Array(12)].map((_, i) => {
-          // Equal House System: House 1 starts at 0° relative to Asc
-          const angle = ((i * 30 + 15) - ascendant) * (Math.PI / 180);
-          const rNum = radius * 0.8;
+          // Equal House System: House 1 starts at 0° relative to Asc, so center is 15°
+          const angle = (((i * 30 + 15) - ascendant) * (Math.PI / 180)) + Math.PI;
+          const rNum = radius * 0.75;
           const x = center + rNum * Math.cos(angle);
           const y = center + rNum * Math.sin(angle);
           return (
             <text 
               key={`h-num-${i}`}
               x={x} y={y} 
-              fill="var(--marker-blue)" 
-              opacity="0.6"
-              fontSize="12" 
+              fill="var(--marker-black)" 
+              fontSize="14" 
+              opacity="0.4"
               textAnchor="middle" 
               dominantBaseline="middle"
               className="handwritten font-bold select-none"
@@ -100,44 +128,30 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
           );
         })}
 
-        {/* Aspect Lines */}
-        {aspects && aspects.map((asp, idx) => {
-          const p1Data = planets.find(p => p.name === asp.p1);
-          const p2Data = planets.find(p => p.name === asp.p2);
-          if (!p1Data || !p2Data) return null;
-          const pos1 = getPos(p1Data.degree, -5);
-          const pos2 = getPos(p2Data.degree, -5);
-          return (
-            <line 
-              key={idx}
-              x1={pos1.x} y1={pos1.y}
-              x2={pos2.x} y2={pos2.y}
-              stroke="var(--marker-blue)"
-              strokeWidth="1.5"
-              opacity="0.3"
-            />
-          );
-        })}
-
-        {/* Planet Markers */}
+        {/* Planets and Glyphs */}
         {planets.map((p, i) => {
-          const angle = (p.degree - ascendant) * (Math.PI / 180);
-          const x = center + (radius + 20) * Math.cos(angle);
-          const y = center + (radius + 20) * Math.sin(angle);
+          const angle = ((p.degree - ascendant) * (Math.PI / 180)) + Math.PI;
+          const x = center + (radius - 18) * Math.cos(angle);
+          const y = center + (radius - 18) * Math.sin(angle);
           return (
-            <g key={i}>
-              <circle cx={x} cy={y} r="4" fill="var(--marker-red)" opacity="0.8" />
+            <g key={i} className="cursor-default group">
+              <circle cx={x} cy={y} r="8" fill="var(--marker-red)" opacity="1" />
+              <text 
+                x={x} y={y - 18} 
+                fill="var(--marker-black)" 
+                fontSize="28" 
+                textAnchor="middle"
+                className="font-black drop-shadow-sm select-none"
+              >
+                {GLYPHS[p.name] || p.name.substring(0, 2).toUpperCase()}
+              </text>
             </g>
           );
         })}
 
-        {/* Central Hub */}
-        <circle cx={center} cy={center} r="6" fill="var(--marker-black)" opacity="0.9" />
+        {/* Center Point */}
+        <circle cx={center} cy={center} r="8" fill="var(--marker-black)" />
       </svg>
-      
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 heading-marker text-marker-blue text-5xl opacity-80 rotate-12">
-        HP <br/> γ
-      </div>
     </div>
   );
 };
@@ -209,8 +223,8 @@ const ElectionalTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
         <div className="w-full lg:w-[45%] space-y-12">
            <header className="space-y-4">
-             <h1 className="heading-marker text-8xl text-marker-teal lowercase"><GlossaryTerm word="Electional Astrology">electional</GlossaryTerm> finder</h1>
-             <p className="handwritten text-2xl text-marker-black font-extrabold uppercase tracking-widest">Optimal <GlossaryTerm word="Timing">timing</GlossaryTerm> selection</p>
+             <h1 className="heading-marker text-6xl text-marker-teal lowercase"><GlossaryTerm word="Electional Astrology">electional</GlossaryTerm> finder</h1>
+             <p className="handwritten text-lg text-marker-black font-extrabold uppercase tracking-widest">Optimal <GlossaryTerm word="Timing">timing</GlossaryTerm> selection</p>
            </header>
            
            <div className="space-y-16 flex flex-col items-center">
@@ -219,7 +233,7 @@ const ElectionalTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                  value={question}
                  onChange={(e) => setQuestion(e.target.value)}
                  placeholder="Enter your intent..."
-                 className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-center text-marker-black text-4xl font-black min-h-[120px] italic placeholder:opacity-40 border-b-4 border-marker-black/10 pb-4 resize-none placeholder:text-marker-black font-marker"
+                 className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-center text-marker-black text-2xl font-black min-h-[120px] italic placeholder:opacity-40 border-b-4 border-marker-black/10 pb-4 resize-none placeholder:text-marker-black font-marker"
                  rows={3}
                />
              </div>
@@ -263,7 +277,7 @@ const ElectionalTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <button 
                     onClick={handleCast} 
                     disabled={loading} 
-                    className="brutalist-button w-full !py-8 !text-3xl shadow-xl border-marker-black"
+                    className="brutalist-button w-full !py-8 !text-2xl shadow-xl border-marker-black"
                 >
                   {loading ? 'Scanning Timeline...' : 'Calculate Timing'}
                 </button>

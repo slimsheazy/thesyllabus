@@ -34,8 +34,8 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         {/* Left Column: Configuration */}
         <div className="w-full lg:w-[400px] space-y-16 lg:sticky lg:top-40 z-10">
            <header className="space-y-4">
-             <h2 className="heading-marker text-7xl text-marker-red lowercase leading-none"><GlossaryTerm word="Four Pillars of Destiny">Four Pillars</GlossaryTerm></h2>
-             <p className="handwritten text-2xl text-marker-red/60 italic"><GlossaryTerm word="Archetype">Archetypal</GlossaryTerm> Destiny Engine</p>
+             <h2 className="heading-marker text-6xl text-marker-red lowercase leading-none"><GlossaryTerm word="Four Pillars of Destiny">Four Pillars</GlossaryTerm></h2>
+             <p className="handwritten text-lg text-marker-red/60 italic"><GlossaryTerm word="Archetype">Archetypal</GlossaryTerm> Destiny Engine</p>
              <div className="w-20 h-1 bg-marker-red/20 marker-border"></div>
            </header>
            
@@ -45,7 +45,7 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                  <label className="handwritten text-sm text-marker-black opacity-40 block ml-2 uppercase tracking-[0.2em] mb-3">Temporal Coordinate: Date</label>
                  <input 
                     type="date" 
-                    className="w-full p-6 text-marker-black text-3xl shadow-sm italic bg-white/50 border-2 border-transparent focus:border-marker-red/20 outline-none transition-all rounded-xl relative z-20"
+                    className="w-full p-6 text-marker-black text-2xl shadow-sm italic bg-white/50 border-2 border-transparent focus:border-marker-red/20 outline-none transition-all rounded-xl relative z-20"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                   />
@@ -55,7 +55,7 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                  <label className="handwritten text-sm text-marker-black opacity-40 block ml-2 uppercase tracking-[0.2em] mb-3">Temporal Coordinate: Time</label>
                  <input 
                     type="time" 
-                    className="w-full p-6 text-marker-black text-3xl shadow-sm italic bg-white/50 border-2 border-transparent focus:border-marker-red/20 outline-none transition-all rounded-xl relative z-20"
+                    className="w-full p-6 text-marker-black text-2xl shadow-sm italic bg-white/50 border-2 border-transparent focus:border-marker-red/20 outline-none transition-all rounded-xl relative z-20"
                     value={birthTime}
                     onChange={(e) => setBirthTime(e.target.value)}
                   />
@@ -65,7 +65,7 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
              <button 
                 onClick={calculateBazi}
                 disabled={loading}
-                className="brutalist-button w-full !py-8 !text-3xl shadow-xl mt-6 group overflow-hidden relative z-10"
+                className="brutalist-button w-full !py-8 !text-2xl shadow-xl mt-6 group overflow-hidden relative z-10"
               >
                 <span className="relative z-10">{loading ? 'Casting Grid...' : 'Calculate Pillars'}</span>
                 {loading && <div className="absolute inset-0 bg-marker-red/5 animate-pulse"></div>}
@@ -90,7 +90,7 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <div className="flex flex-col md:flex-row justify-between items-center md:items-end border-b-2 border-marker-black/5 pb-10 gap-8">
                   <div className="text-center md:text-left space-y-2">
                     <span className="handwritten text-sm text-marker-black/40 block uppercase tracking-[0.3em]">Signature Archetype</span>
-                    <div className="text-5xl md:text-7xl heading-marker text-marker-blue leading-none break-words"><GlossaryTerm word="Day Master">Day Master</GlossaryTerm>: {result.dayMaster}</div>
+                    <div className="text-5xl heading-marker text-marker-blue leading-none break-words"><GlossaryTerm word="Day Master">Day Master</GlossaryTerm>: {result.dayMaster}</div>
                   </div>
                   <div className="flex items-center gap-4">
                      <ReadAloudButton text={`${result.densityProfile} ${result.thermodynamicLogic}`} className="!py-2 !px-4 bg-marker-blue/10 border-marker-blue/20" label="Read Profile" />
@@ -101,25 +101,25 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 </div>
 
                 {/* The Pillars Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                   {result.pillars.map((p: any, i: number) => (
                     <button 
                       key={i} 
                       onClick={() => setSelectedPillarIndex(i)}
-                      className={`group relative bg-white/40 p-6 md:p-8 flex flex-col items-center text-center gap-4 md:gap-6 transition-all marker-border ${
+                      className={`group relative bg-white/40 p-4 md:p-6 flex flex-col items-center text-center gap-3 md:gap-4 transition-all marker-border min-h-[160px] justify-center ${
                         selectedPillarIndex === i 
                         ? 'border-marker-blue ring-4 ring-marker-blue/5 scale-105 z-10' 
                         : 'border-marker-black/10 hover:border-marker-blue/40 hover:scale-[1.02]'
                       }`}
                     >
-                       <span className="handwritten text-[10px] md:text-sm text-marker-black/30 uppercase tracking-[0.2em]">{p.type}</span>
+                       <span className="handwritten text-[10px] md:text-xs text-marker-black/30 uppercase tracking-[0.1em]">{p.type}</span>
                        <div className="space-y-1">
-                          <div className="text-5xl md:text-6xl heading-marker text-marker-black leading-none group-hover:text-marker-blue transition-colors">{p.stem}</div>
-                          <div className="text-3xl md:text-4xl heading-marker text-marker-black/20 leading-none">{p.branch}</div>
+                          <div className="text-3xl md:text-4xl heading-marker text-marker-black leading-none group-hover:text-marker-blue transition-colors">{p.stem}</div>
+                          <div className="text-xl md:text-2xl heading-marker text-marker-black/20 leading-none">{p.branch}</div>
                        </div>
-                       <div className="handwritten text-xs md:text-base text-marker-blue/60 font-bold uppercase tracking-tighter truncate w-full">{p.tenGod}</div>
+                       <div className="handwritten text-[10px] md:text-xs text-marker-blue/60 font-bold uppercase leading-tight max-w-full">{p.tenGod}</div>
                        {selectedPillarIndex === i && (
-                         <div className="absolute -bottom-2 w-1/2 h-1 bg-marker-blue rounded-full"></div>
+                         <div className="absolute -bottom-1 w-1/2 h-1 bg-marker-blue rounded-full"></div>
                        )}
                     </button>
                   ))}
@@ -175,11 +175,11 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       <div key={idx} className="p-8 md:p-10 marker-border border-marker-black/5 bg-white/30 flex flex-col md:flex-row gap-6 md:gap-10 hover:border-marker-blue/20 transition-all group">
                         <div className="md:w-1/4 space-y-2">
                           <span className="handwritten text-xs text-marker-blue/40 font-bold block uppercase tracking-widest">Potential Node 0{idx+1}</span>
-                          <span className="heading-marker text-4xl md:text-5xl text-marker-black leading-none group-hover:text-marker-blue transition-colors">{god.name}</span>
+                          <span className="heading-marker text-3xl md:text-4xl text-marker-black leading-none group-hover:text-marker-blue transition-colors break-words">{god.name}</span>
                         </div>
                         <div className="flex-1 space-y-4">
                            <span className="handwritten text-sm text-marker-black/20 italic block tracking-widest">Structural Reference: [{god.vector}]</span>
-                           <p className="handwritten text-xl md:text-3xl text-marker-black/60 italic leading-relaxed">"{god.implication}"</p>
+                           <p className="handwritten text-xl md:text-2xl text-marker-black/60 italic leading-relaxed">"{god.implication}"</p>
                         </div>
                       </div>
                     ))}
@@ -192,10 +192,10 @@ const BaziTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                      <div className="absolute inset-0 bg-marker-green/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                      <div className="relative z-10 space-y-6">
                        <div className="handwritten text-lg md:text-xl text-marker-green font-bold uppercase tracking-[0.5em] italic">Stationary Conclusion</div>
-                       <p className="heading-marker text-4xl md:text-7xl text-marker-black lowercase leading-tight group-hover:scale-[1.01] transition-transform">
+                       <p className="heading-marker text-3xl md:text-5xl text-marker-black lowercase leading-tight group-hover:scale-[1.01] transition-transform break-words">
                          {result.densityProfile || "Pattern Harmony Established."}
                        </p>
-                       <div className="handwritten text-xl md:text-2xl text-marker-black/40 italic max-w-2xl mx-auto pt-4 border-t border-marker-black/5">
+                       <div className="handwritten text-lg md:text-xl text-marker-black/40 italic max-w-2xl mx-auto pt-4 border-t border-marker-black/5">
                          {result.thermodynamicLogic}
                        </div>
                      </div>

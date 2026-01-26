@@ -232,6 +232,7 @@ const BioCalcTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <div className="flex flex-col items-center gap-4 border-b-2 border-marker-black/10 pb-10">
                    <div className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-widest italic">Actuarial Threshold</div>
                    <div className="text-6xl md:text-8xl heading-marker text-marker-red text-center leading-none">{result.obsolescenceDate}</div>
+                   <div className="handwritten text-2xl text-marker-black/60 font-bold uppercase tracking-wide">Age: {result.projectedAge}</div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

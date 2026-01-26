@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { getFriendshipMatrix } from '../services/geminiService';
 import { GlossaryTerm } from './GlossaryEngine';
+import { ReadAloudButton } from './ReadAloudButton';
 
 const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [subject1, setSubject1] = useState('');
@@ -28,8 +29,8 @@ const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       
       <div className="w-full space-y-16">
         <header className="text-center space-y-2">
-          <h2 className="heading-marker text-7xl text-marker-blue lowercase">Friendship <GlossaryTerm word="Matrix">Matrix</GlossaryTerm></h2>
-          <p className="handwritten text-xl text-marker-blue opacity-60"><GlossaryTerm word="Compatibility">Compatibility</GlossaryTerm> & <GlossaryTerm word="Synastry">Synastry</GlossaryTerm> Report</p>
+          <h2 className="heading-marker text-6xl text-marker-blue lowercase">Friendship <GlossaryTerm word="Matrix">Matrix</GlossaryTerm></h2>
+          <p className="handwritten text-lg text-marker-blue opacity-60"><GlossaryTerm word="Compatibility">Compatibility</GlossaryTerm> & <GlossaryTerm word="Synastry">Synastry</GlossaryTerm> Report</p>
           <div className="w-full h-px bg-marker-black/10 marker-border mt-8"></div>
         </header>
 
@@ -40,7 +41,7 @@ const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <input 
                 type="text" 
                 placeholder="Name or identifier"
-                className="w-full p-8 text-marker-black text-3xl shadow-sm text-center italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all placeholder:text-marker-black/20"
+                className="w-full p-8 text-marker-black text-2xl shadow-sm text-center italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all placeholder:text-marker-black/20"
                 value={subject1}
                 onChange={(e) => setSubject1(e.target.value)}
               />
@@ -51,7 +52,7 @@ const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <input 
                 type="text" 
                 placeholder="Name or identifier"
-                className="w-full p-8 text-marker-black text-3xl shadow-sm text-center italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all placeholder:text-marker-black/20"
+                className="w-full p-8 text-marker-black text-2xl shadow-sm text-center italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all placeholder:text-marker-black/20"
                 value={subject2}
                 onChange={(e) => setSubject2(e.target.value)}
               />
@@ -61,7 +62,7 @@ const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <button 
             onClick={handleAnalyze} 
             disabled={loading} 
-            className="brutalist-button w-full max-w-2xl !py-6"
+            className="brutalist-button w-full max-w-2xl !py-8 !text-2xl"
           >
             {loading ? 'Measuring bond...' : 'Measure Compatibility'}
           </button>
@@ -79,19 +80,22 @@ const FriendshipMatrix: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <div className="w-full max-w-5xl mx-auto space-y-16 animate-in fade-in duration-500">
                <div className="flex flex-col items-center gap-6">
                   <div className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-[0.5em] italic">Compatibility Rating</div>
-                  <div className="text-marker-black font-bold text-[12rem] leading-none heading-marker select-none">{result.compatibilityScore}%</div>
+                  <div className="text-marker-black font-bold text-[10rem] leading-none heading-marker select-none">{result.compatibilityScore}%</div>
                   <div className="w-full h-2 bg-marker-black/5 marker-border max-w-md overflow-hidden">
                      <div className="h-full bg-marker-blue" style={{width: `${result.compatibilityScore}%`}}></div>
                   </div>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="p-10 marker-border border-marker-blue bg-white/40 shadow-xl">
-                     <span className="handwritten text-xs text-marker-blue font-bold uppercase tracking-widest block mb-6 italic"><GlossaryTerm word="Frequency">Frequency</GlossaryTerm> Match</span>
+                  <div className="p-6 marker-border border-marker-blue bg-white/40 shadow-xl relative">
+                     <div className="flex justify-between items-center mb-4 border-b-2 border-marker-blue/10 pb-2">
+                        <span className="handwritten text-xs text-marker-blue font-bold uppercase tracking-widest italic"><GlossaryTerm word="Frequency">Frequency</GlossaryTerm> Match</span>
+                        <ReadAloudButton text={`${result.vibrationalMatch}. ${result.analysis}`} className="!py-1 !px-2 !text-xs bg-marker-blue/5 border-marker-blue/20 text-marker-blue" />
+                     </div>
                      <p className="handwritten text-2xl italic text-marker-black/80 leading-relaxed">"{result.vibrationalMatch}"</p>
                   </div>
-                  <div className="p-10 marker-border border-marker-black bg-white/40 shadow-xl">
-                     <span className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-widest block mb-6 italic">Final <GlossaryTerm word="Analysis">Analysis</GlossaryTerm></span>
+                  <div className="p-6 marker-border border-marker-black bg-white/40 shadow-xl">
+                     <span className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-widest block mb-4 italic">Final <GlossaryTerm word="Analysis">Analysis</GlossaryTerm></span>
                      <p className="heading-marker text-3xl text-marker-black lowercase">{result.analysis}</p>
                   </div>
                </div>

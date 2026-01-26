@@ -43,8 +43,8 @@ const ColorPaletteTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <div className="w-full flex flex-col xl:flex-row gap-16 items-start">
         <div className="w-full xl:w-[450px] space-y-12 xl:sticky xl:top-20">
            <header className="space-y-4">
-             <h2 className="heading-marker text-8xl text-marker-blue lowercase leading-none"><GlossaryTerm word="Zodiac">Zodiacal</GlossaryTerm> Palette</h2>
-             <p className="handwritten text-2xl text-marker-blue font-black uppercase tracking-widest"><GlossaryTerm word="Chromatic">Chromatic</GlossaryTerm> mapping of energy</p>
+             <h2 className="heading-marker text-6xl text-marker-blue lowercase leading-none"><GlossaryTerm word="Zodiac">Zodiacal</GlossaryTerm> Palette</h2>
+             <p className="handwritten text-lg text-marker-blue font-black uppercase tracking-widest"><GlossaryTerm word="Chromatic">Chromatic</GlossaryTerm> mapping of energy</p>
              <div className="w-32 h-2 bg-marker-blue/20 marker-border"></div>
            </header>
            
@@ -72,14 +72,14 @@ const ColorPaletteTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                  <input 
                     type="text" 
                     placeholder="Enter the vibe..."
-                    className="w-full p-8 text-marker-black text-3xl shadow-sm italic placeholder:opacity-40 bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all"
+                    className="w-full p-8 text-marker-black text-2xl shadow-sm italic placeholder:opacity-40 bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all"
                     value={vibe}
                     onChange={(e) => setVibe(e.target.value)}
                   />
                ) : (
                  <input 
                     type="date" 
-                    className="w-full p-8 text-marker-black text-3xl shadow-sm italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all"
+                    className="w-full p-8 text-marker-black text-2xl shadow-sm italic bg-white/50 border-2 border-marker-black/5 rounded-xl focus:border-marker-blue focus:outline-none transition-all"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                   />
@@ -89,7 +89,7 @@ const ColorPaletteTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
              <button 
                 onClick={handleGenerate}
                 disabled={loading}
-                className="brutalist-button w-full !py-8 !text-3xl shadow-xl mt-4 relative group overflow-hidden"
+                className="brutalist-button w-full !py-8 !text-2xl shadow-xl mt-4 relative group overflow-hidden"
               >
                 <span className="relative z-10">{loading ? 'Synthesizing Spectrum...' : 'Generate 12-Layer Matrix'}</span>
                 {loading && <div className="absolute inset-0 bg-marker-blue/5 animate-pulse"></div>}
@@ -113,7 +113,7 @@ const ColorPaletteTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <div className="p-12 marker-border border-marker-blue bg-white shadow-2xl space-y-8 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-2 h-full bg-marker-blue"></div>
                   <div className="handwritten text-sm font-black uppercase tracking-[0.4em] text-marker-blue"><GlossaryTerm word="Spectrum">Spectrum</GlossaryTerm> Analysis Report</div>
-                  <p className="handwritten text-4xl italic text-marker-black font-black leading-relaxed">
+                  <p className="handwritten text-3xl italic text-marker-black font-black leading-relaxed">
                     "{result.analysis}"
                   </p>
                   <div className="flex items-center gap-6 pt-4 border-t-4 border-marker-black/5">

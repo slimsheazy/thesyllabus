@@ -97,7 +97,7 @@
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       color: var(--marker-black);
       overflow: hidden;
-      font-size: 14px;
+      font-size: 13.5px; /* Reduced base font size */
       font-weight: 300;
       /* Mobile Optimization */
       overscroll-behavior: none;
@@ -217,7 +217,7 @@
     }
 
     .title-main {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-size: clamp(2.2rem, 5vw, 3.8rem); /* Reduced clamp() values */
       color: var(--marker-black);
       line-height: 1;
       text-transform: lowercase;
@@ -238,10 +238,10 @@
     .brutalist-button {
       background: rgb(var(--wb-surface-rgb));
       color: var(--marker-black);
-      padding: 0.5rem 1.5rem;
+      padding: 0.4rem 1.2rem; /* Reduced padding */
       font-family: 'Inter', sans-serif;
-      font-weight: 200;
-      font-size: 1rem;
+      font-weight: 300; /* Slightly heavier for legibility */
+      font-size: 0.9rem; /* Reduced font size */
       border: 1px solid var(--marker-black);
       border-radius: 2px; /* Sharp */
       transition: all 0.2s ease;
@@ -269,12 +269,12 @@
         color: var(--marker-black);
         font-family: 'Inter', sans-serif; 
         font-weight: 200;
-        font-size: 16px;
+        font-size: 16px; /* Keep at 16px to prevent iOS zoom */
     }
     
     @media (min-width: 768px) {
         input, textarea, select {
-            font-size: 1.1rem;
+            font-size: 1rem; /* Reduced desktop size */
         }
     }
 

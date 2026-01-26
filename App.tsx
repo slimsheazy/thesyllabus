@@ -162,14 +162,14 @@ const NavigationOverlay: React.FC<{
               <div key={i} className="space-y-4">
                 <div className="flex items-center gap-3">
                    <div className="w-2 h-2 rounded-full mt-1" style={{ backgroundColor: cat.color }}></div>
-                   <span className="heading-marker text-3xl text-marker-black uppercase tracking-wide">{cat.label}</span>
+                   <span className="heading-marker text-2xl text-marker-black uppercase tracking-wide">{cat.label}</span>
                 </div>
                 <ul className="space-y-1 pl-5 border-l border-marker-black/5">
                   {cat.items.map((item, j) => (
                     <li key={j}>
                       <button 
                         onClick={() => onNavigate(item.page)}
-                        className="w-full text-left handwritten text-xl font-bold text-marker-black hover:text-marker-blue transition-colors py-1.5 px-4 rounded-md hover:bg-marker-black/5"
+                        className="w-full text-left handwritten text-lg font-bold text-marker-black hover:text-marker-blue transition-colors py-1 px-4 rounded-md hover:bg-marker-black/5"
                       >
                         {item.name}
                       </button>
@@ -274,15 +274,15 @@ const HomeView: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-4 md:p-12">
-      <div className="max-w-4xl w-full text-center space-y-10 flex flex-col items-center">
+      <div className="max-w-4xl w-full text-center space-y-8 flex flex-col items-center">
         
         {/* Header Branding */}
-        <div className="space-y-6">
-           <div className="inline-block px-4 py-1 border border-marker-black/10 rounded-full">
-              <span className="handwritten text-xs font-bold uppercase tracking-widest text-marker-black/60">Esoteric Archive v1.0</span>
+        <div className="space-y-4">
+           <div className="inline-block px-3 py-1 border border-marker-black/10 rounded-full">
+              <span className="handwritten text-xs font-medium uppercase tracking-widest text-marker-black/60">Esoteric Archive v1.0</span>
            </div>
-           <h1 className="title-main text-marker-green leading-none text-5xl md:text-7xl">The Syllabus</h1>
-           <p className="handwritten text-lg text-marker-black/60 max-w-lg mx-auto leading-relaxed px-4">
+           <h1 className="title-main text-marker-green">The Syllabus</h1>
+           <p className="handwritten text-base text-marker-black/60 max-w-lg mx-auto leading-relaxed px-4">
              An open <GlossaryTerm word="repository">repository</GlossaryTerm> of ancient frameworks and modern <GlossaryTerm word="synthesis">synthesis</GlossaryTerm>.
            </p>
         </div>
@@ -290,12 +290,12 @@ const HomeView: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
         {/* Interactive Word Card */}
         <div 
           onClick={() => loadWord(false)}
-          className="w-full max-w-xl marker-border bg-white p-6 md:p-10 shadow-sm hover:shadow-md transition-all duration-500 group relative overflow-hidden cursor-pointer"
+          className="w-full max-w-lg marker-border bg-white p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-500 group relative overflow-hidden cursor-pointer"
           title="Click to reveal a new concept"
         >
           <div className="absolute top-0 left-0 w-1 h-full bg-marker-green/20 group-hover:bg-marker-green transition-colors"></div>
           
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex justify-between items-start mb-4">
             <span className="handwritten text-xs font-bold uppercase tracking-[0.2em] text-marker-green opacity-80">{label}</span>
             <div className="flex items-center gap-2">
                <span className="text-[10px] uppercase font-bold text-marker-black/20 group-hover:text-marker-green/40 transition-colors">Click to Cycle</span>
@@ -304,9 +304,9 @@ const HomeView: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
           </div>
           
           {wordData && !loading ? (
-            <div className="space-y-4 text-left animate-in fade-in duration-300">
-              <h3 className="heading-marker text-3xl md:text-4xl text-marker-black break-words">{wordData.word}</h3>
-              <p className="font-sans text-base md:text-lg text-marker-black/70 leading-relaxed border-l-2 border-marker-black/5 pl-4">
+            <div className="space-y-3 text-left animate-in fade-in duration-300">
+              <h3 className="heading-marker text-3xl text-marker-black break-words">{wordData.word}</h3>
+              <p className="font-sans text-base text-marker-black/70 leading-relaxed border-l-2 border-marker-black/5 pl-4">
                 {wordData.definition}
               </p>
             </div>
@@ -317,8 +317,8 @@ const HomeView: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
           )}
         </div>
         
-        <div className="pt-8">
-          <button onClick={onEnter} className="brutalist-button px-10 py-4 text-xl bg-white hover:bg-marker-black/5">
+        <div className="pt-6">
+          <button onClick={onEnter} className="brutalist-button px-8 py-3 text-base bg-white hover:bg-marker-black/5">
             Open Library
           </button>
         </div>

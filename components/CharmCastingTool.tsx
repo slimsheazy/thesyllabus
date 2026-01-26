@@ -38,11 +38,13 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [reading, setReading] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   
+  const [hoveredCharm, setHoveredCharm] = useState<{name: string, meaning: string, x: number, y: number} | null>(null);
+  
   // Physics State Refs (Mutable for animation loop)
   const charmsRef = useRef<PhysicsCharm[]>([]);
   const animationRef = useRef<number>(0);
   const { recordCalculation } = useSyllabusStore();
-  const { inspectWord, hideInspector, updatePosition, cancelHide } = useGlossary();
+  // removed useGlossary hooks
 
   // Initialize Audio Context on user interaction if needed
   const initAudio = () => {
@@ -90,7 +92,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const cx = width / 2;
     const cy = height / 2;
     const dx = x - cx;
-    const dy = y - cy;
+    const dy = y - cy; // Y grows downward in canvas, but standard cartesian Y grows upward.
     const dist = Math.sqrt(dx * dx + dy * dy);
     
     // Center Void (Radius 10% of width)
@@ -98,15 +100,109 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     // Out of bounds (Radius 45% of width)
     if (dist > width * 0.48) return "THE ETHER (Out of Bounds)"; 
 
-    // Calculate angle in degrees (0 to 360)
-    // Adding 360 to ensure positive result
+    // Calculate angle in degrees
+    // Canvas: 0 is 3 o'clock, 90 is 6 o'clock (down), 180 is 9 o'clock, 270 is 12 o'clock (up)
+    // Astrological: House 1 starts at Ascendant (9 o'clock / 180°) and goes Counter-Clockwise (Down).
+    // So 180° -> 90° is House 1? No, 180 (9pm) to 210 is usually House 1?
+    // Let's standardize:
+    // ASC (9 o'clock) is the Cusp of House 1.
+    // House 1 is 9 o'clock to 8 o'clock.
+    // House 2 is 8 o'clock to 7 o'clock.
+    
+    // Let's use Math.atan2(dy, dx).
+    // result is -PI to PI.
+    // 3 o'clock = 0
+    // 6 o'clock = PI/2 (90 deg)
+    // 9 o'clock = PI (180 deg)
+    // 12 o'clock = -PI/2 (-90 deg)
+    
     let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    // Normalize to 0-360 starting at 3 o'clock going clockwise (Canvas standard)
     if (angle < 0) angle += 360;
-
-    // 12 Sectors of 30 degrees
-    // Standard cartesian: 0 deg is 3 o'clock. 
-    // Sector 1: 0-30 deg (House 1)
-    const sector = Math.floor(angle / 30) + 1;
+    
+    // We want House 1 to start at 180 (9 o'clock) and go clockwise in this coordinate system (which corresponds to "down" on the screen).
+    // Wait, astrology is Counter-Clockwise?
+    // Standard: Ascendant is East (Left). House 1 is "below" the horizon. 
+    // So House 1 is 9 o'clock to 8 o'clock? That's visually "down".
+    // 9 o'clock is 180 deg. 6 o'clock is 90 deg.
+    // So House 1 spans 180 -> 90? No.
+    // Let's shift so 9 o'clock (180) is 0.
+    
+    // Let's map degrees to Houses manually to be safe.
+    // 0-30: House 7 (Descendant is 3 o'clock, going down/right? No, House 7 is usually 3-2 o'clock)
+    
+    // Simplified Visual Map for "The Syllabus" (Counter-Clockwise from 9 o'clock):
+    // 9-8 (180-150?): H1
+    // 8-7: H2
+    // ...
+    
+    // Let's just rotate our angle so 0 is 9 o'clock (180 in canvas).
+    // And flip direction?
+    
+    // Easy way: 
+    // House 1: 150° - 180° (Just below horizon on left) -> Canvas 180 is Left. Canvas 90 is Bottom.
+    // So H1 is 180 to 90 quadrant?
+    // 12 Houses = 30 degrees each.
+    
+    // Correct mapping for Canvas coordinates (Y down):
+    // H1: 180° to 150° (Left to Lower-Left) ?? No, 180 is left. 90 is bottom.
+    // Let's assume equal houses.
+    // H1: 150-180 (if 180 is AC)
+    // Let's just define sectors based on Canvas Angle (0=Right, 90=Down, 180=Left, 270=Up)
+    
+    // House 1 (Identity): Left, going down. (180 -> 150) ? No, angle goes 180 -> 90.
+    // Let's shift angle so 180 (Left) becomes 0.
+    // Canvas: 180.
+    // Target: 0.
+    // Shift: -180.
+    // H1: 0 to 30.
+    
+    let chartAngle = angle - 180;
+    if (chartAngle < 0) chartAngle += 360;
+    // Now 0 is Left (9 o'clock).
+    // 90 is Top (12 o'clock) -> -90 (270) in canvas was up. 180+90 = 270. So 90 is Up.
+    // 270 is Bottom (6 o'clock).
+    
+    // Standard Astrology Order (CCW from Ascendant):
+    // H1: 0-30 (Left to Below-Left)
+    // H2: 30-60
+    // H3: 60-90 (Nadir / IC)
+    // ...
+    // Wait, in Canvas (Y down), going "down" from Left increases angle?
+    // At 180 (Left), increasing angle goes to 270 (Top)?? No.
+    // 180 is Left. 270 is Top.
+    // 180 -> 270 is "Up".
+    // 180 -> 90 is "Down"? No, 90 is bottom.
+    // Canvas: 0 (Right), 90 (Bottom), 180 (Left), 270 (Top).
+    
+    // So going "Counter-Clockwise" on a chart (Left -> Down -> Right -> Up):
+    // 180 (Left) -> 90 (Bottom). (Angle DECREASES in Canvas logic?)
+    // Yes.
+    
+    // Let's define the angle from the Left (180), going "down" (towards 90).
+    // Left = 180.
+    // Down = 90.
+    // Right = 0 / 360.
+    // Up = 270.
+    
+    // We want a value 0-360 starting at 180 and moving towards 90.
+    // 180 -> 90 (Diff -90).
+    // Let's simply invert the canvas angle logic or map ranges.
+    
+    let house = 0;
+    
+    if (angle >= 150 && angle < 180) house = 1;       // H1: Just below horizon (Left)
+    else if (angle >= 120 && angle < 150) house = 2;
+    else if (angle >= 90 && angle < 120) house = 3;   // H3: Bottom-Left
+    else if (angle >= 60 && angle < 90) house = 4;    // H4: Bottom-Right (IC)
+    else if (angle >= 30 && angle < 60) house = 5;
+    else if (angle >= 0 && angle < 30) house = 6;
+    else if (angle >= 330 && angle < 360) house = 7;  // H7: Descendant (Right)
+    else if (angle >= 300 && angle < 330) house = 8;
+    else if (angle >= 270 && angle < 300) house = 9;
+    else if (angle >= 240 && angle < 270) house = 10; // H10: Midheaven (Top)
+    else if (angle >= 210 && angle < 240) house = 11;
+    else if (angle >= 180 && angle < 210) house = 12; // H12: Just above horizon (Left)
     
     const HOUSES = [
       "House I (Self)", 
@@ -123,7 +219,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       "House XII (Unconscious)"
     ];
     
-    return HOUSES[sector - 1] || "Unknown Sector";
+    return HOUSES[house - 1] || "Unknown Sector";
   };
 
   const initCharms = (width: number, height: number) => {
@@ -386,8 +482,6 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const x = (clientX - rect.left) * (canvas.width / rect.width);
     const y = (clientY - rect.top) * (canvas.height / rect.height);
 
-    updatePosition(clientX, clientY);
-
     let hit = false;
     for (let i = charmsRef.current.length - 1; i >= 0; i--) {
       const c = charmsRef.current[i];
@@ -397,9 +491,16 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       
       if (dx * dx + dy * dy < r * r) {
         const def = CHARMS.find(ch => ch.id === c.id);
+        const detail = reading?.charmDetails?.find((d: any) => d.charm === def?.name);
+        
         if (def) {
-          inspectWord(def.name);
-          cancelHide();
+          // Adjust tooltip position to be relative to the viewport
+          setHoveredCharm({
+            name: def.name,
+            meaning: detail?.meaning || "Meaning obscured...",
+            x: clientX,
+            y: clientY - 40 // Offset above finger/cursor
+          });
           hit = true;
         }
         break;
@@ -407,7 +508,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
 
     if (!hit) {
-      hideInspector();
+      setHoveredCharm(null);
     }
   };
 
@@ -421,7 +522,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   };
 
   const handleCanvasLeave = () => {
-    hideInspector();
+    setHoveredCharm(null);
   };
 
   useEffect(() => {
@@ -450,7 +551,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="flex-1 w-full space-y-12">
            <header className="space-y-4">
              <h2 className="heading-marker text-6xl text-marker-black lowercase">Charm Caster</h2>
-             <p className="handwritten text-xl text-marker-black opacity-60"><GlossaryTerm word="Lithomancy">Lithomancy</GlossaryTerm> Board</p>
+             <p className="handwritten text-lg text-marker-black opacity-60"><GlossaryTerm word="Lithomancy">Lithomancy</GlossaryTerm> Board</p>
            </header>
            
            <div className="space-y-8">
@@ -460,7 +561,7 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                  value={intent}
                  onChange={(e) => setIntent(e.target.value)}
                  placeholder="What do you seek?"
-                 className="w-full p-8 text-marker-black text-3xl shadow-sm italic placeholder:opacity-30 border-marker-black/20 focus:border-marker-black/40 bg-white/50"
+                 className="w-full p-8 text-marker-black text-2xl shadow-sm italic placeholder:opacity-30 border-marker-black/20 focus:border-marker-black/40 bg-white/50"
                />
              </div>
 
@@ -481,17 +582,6 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                         <ReadAloudButton text={`${reading.synthesis} ${reading.keyInsight}`} className="!py-1 !px-2 !text-xs bg-marker-blue/5 border-marker-blue/20 text-marker-blue" />
                      </div>
                      <p className="handwritten text-2xl italic text-marker-black/80 leading-relaxed">"{reading.synthesis}"</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     {reading.charmDetails.map((detail: any, i: number) => (
-                       <div key={i} className="p-6 marker-border border-marker-black/5 bg-white/40">
-                         <span className="handwritten text-xs font-bold uppercase text-marker-black/40 block mb-2">
-                           <GlossaryTerm word={detail.charm}>{detail.charm}</GlossaryTerm>
-                         </span>
-                         <p className="handwritten text-lg text-marker-black/80 leading-snug">{detail.meaning}</p>
-                       </div>
-                     ))}
                   </div>
 
                   <div className="p-8 marker-border border-marker-red bg-white/40">
@@ -522,6 +612,22 @@ const CharmCastingTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                onMouseLeave={handleCanvasLeave}
                onTouchStart={handleCanvasTouchStart}
              />
+             {/* Hover Tooltip */}
+             {hoveredCharm && (
+               <div 
+                 className="fixed z-[9999] pointer-events-none bg-white border border-marker-black shadow-2xl p-4 rounded-lg max-w-xs animate-in zoom-in-95 duration-200"
+                 style={{ 
+                   left: hoveredCharm.x, 
+                   top: hoveredCharm.y,
+                   transform: 'translate(-50%, -100%)'
+                 }}
+               >
+                 <div className="handwritten text-xs font-bold uppercase text-marker-blue mb-1 tracking-widest">{hoveredCharm.name}</div>
+                 <div className="handwritten text-sm text-marker-black italic leading-snug">{hoveredCharm.meaning}</div>
+                 {/* Little triangle arrow */}
+                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-white border-r border-b border-marker-black rotate-45"></div>
+               </div>
+             )}
              {/* Decorative Corner Screws */}
              <div className="absolute top-4 left-4 md:top-6 md:left-6 w-2 h-2 md:w-3 md:h-3 rounded-full bg-marker-black opacity-20"></div>
              <div className="absolute top-4 right-4 md:top-6 md:right-6 w-2 h-2 md:w-3 md:h-3 rounded-full bg-marker-black opacity-20"></div>

@@ -401,11 +401,12 @@ export const getBiologicalDepreciation = async (metrics: { age: number, telomere
     type: Type.OBJECT,
     properties: {
       obsolescenceDate: { type: Type.STRING },
+      projectedAge: { type: Type.NUMBER, description: "Age at obsolescence date" },
       accuracyProbability: { type: Type.NUMBER },
       actuarialReport: { type: Type.STRING },
       depreciationMetrics: { type: Type.STRING }
     },
-    required: ["obsolescenceDate", "accuracyProbability", "actuarialReport", "depreciationMetrics"]
+    required: ["obsolescenceDate", "projectedAge", "accuracyProbability", "actuarialReport", "depreciationMetrics"]
   });
 };
 
@@ -445,11 +446,12 @@ export const getPieDeconstruction = async (word: string) => {
     properties: {
       pieRoot: { type: Type.STRING },
       rootMeaning: { type: Type.STRING },
+      pronunciation: { type: Type.STRING, description: "Phonetic pronunciation guide for the PIE root" },
       semanticTrace: { type: Type.ARRAY, items: { type: Type.STRING } },
       modernConcept: { type: Type.STRING },
       esotericImplication: { type: Type.STRING }
     },
-    required: ["pieRoot", "rootMeaning", "semanticTrace", "modernConcept", "esotericImplication"]
+    required: ["pieRoot", "rootMeaning", "pronunciation", "semanticTrace", "modernConcept", "esotericImplication"]
   });
 };
 
@@ -515,7 +517,19 @@ export const generateCosmicMadLib = async (inputs: { noun: string, verb: string,
 };
 
 export const getFriendshipMatrix = async (subject1: string, subject2: string) => {
-  const prompt = `Vibrational synastry for Subject Alpha: "${subject1}" and Subject Beta: "${subject2}".`;
+  const prompt = `
+    Perform a vibrational synastry analysis for Subject Alpha: "${subject1}" and Subject Beta: "${subject2}".
+    
+    Methodology:
+    1. Analyze the "Cheiro" numerological value of both names.
+    2. Analyze the phonetic resonance (vowel harmony vs dissonance).
+    3. Determine a compatibility score (0-100) based on these esoteric metrics.
+    
+    Output JSON:
+    - 'compatibilityScore': number (0-100).
+    - 'vibrationalMatch': A short, poetic phrase describing the texture of their connection (e.g., "Static Friction", "Harmonic Resonance", "Dissonant Echo").
+    - 'analysis': A concise, brutalist summary of WHY they interact this way.
+  `;
   
   return generateJson(MODELS.PRO, prompt, {
     type: Type.OBJECT,
@@ -651,53 +665,19 @@ export const getBirthChartAnalysis = async (input: {
   settings: Record<string, any> 
 }) => {
   const prompt = `
-    You are the Birth Chart Engine for an astrology application.
-    Your job is to compute and interpret natal charts with precision, consistency, and zero generic filler.
-
-    CORE RULES:
-    1. Never guess missing data. If birth date, time, or location is incomplete, request clarification.
-    2. All calculations and interpretations must follow the settings provided by the user or the app.
-    3. Never provide generic, vague, or personality-based interpretations. All interpretations must be:
-       - Specific to the chart
-       - Based on actual placements
-       - Rooted in traditional or modern astrology depending on settings
-    4. Never invent planets, aspects, or house placements that were not provided or calculated.
-
-    HOUSE SYSTEM & NUMBERING RULES:
-    1. The chart contains 12 houses.
-    2. House numbering ALWAYS begins at the Ascendant.
-    3. House numbers increase COUNTERCLOCKWISE around the wheel.
-    4. House 1 = the sign on the Ascendant.
-    5. House 2 = the next sign counterclockwise.
-    6. House 3 = the next sign counterclockwise, and so on.
-    7. House 12 is the final house before returning to House 1.
-    8. Houses are fixed and NEVER renumbered based on planets.
-    9. Use the house system specified in settings: ${input.settings.houseSystem || 'Placidus'}
-    10. Never switch systems unless explicitly told.
-
-    PLANETARY RULES:
-    1. Use the planetary positions calculated for: Date ${input.date}, Time ${input.time}, Lat ${input.lat}, Lng ${input.lng}.
-    2. Do not alter or approximate planetary degrees.
-    3. Include: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Chiron, Lunar Nodes (True).
-    4. Retrograde status must be preserved exactly as calculated.
-
-    ASPECT RULES:
-    1. Use only the aspects enabled in settings: Conjunction, Sextile, Square, Trine, Opposition.
-    2. Use standard orbs (Conjunction: 8, Opposition: 8, Trine: 8, Square: 7, Sextile: 5).
-
-    INTERPRETATION RULES:
-    1. Interpret ONLY what is present in the chart.
-    2. Interpretations must be technical and non-generic.
-    3. Avoid clichés. Describe function, sign expression, house context, and aspect dynamics.
-
-    INPUT DATA:
+    You are an expert Astrological Engine.
+    Generate a detailed Natal Chart analysis for:
     Date: ${input.date}
     Time: ${input.time}
     Location: ${input.lat}, ${input.lng}
-    Settings: ${JSON.stringify(input.settings)}
+    House System: ${input.settings.houseSystem || 'Placidus'}
 
-    OUTPUT FORMAT:
-    Return valid JSON matching the schema strictly.
+    Tasks:
+    1. Calculate approximate planetary positions (Signs, Degrees, Houses) for this date/time/location.
+    2. Identify key aspects (Conjunction, Square, Trine, Opposition, Sextile).
+    3. Provide a structured interpretation of the chart's core themes.
+
+    Output strictly as JSON matching the schema below.
   `;
 
   return generateJson(MODELS.PRO, prompt, {

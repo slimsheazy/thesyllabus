@@ -78,7 +78,7 @@ const SemanticDriftTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       {/* Header */}
       <header className="w-full text-center space-y-4 mb-16">
         <h2 className="heading-marker text-6xl text-marker-green lowercase"><GlossaryTerm word="Semantic Drift">Semantic Drift</GlossaryTerm></h2>
-        <p className="handwritten text-xl text-marker-green opacity-60"><GlossaryTerm word="Linguistics">Linguistic</GlossaryTerm> Literacy Assessment</p>
+        <p className="handwritten text-lg text-marker-green opacity-60"><GlossaryTerm word="Linguistics">Linguistic</GlossaryTerm> Literacy Assessment</p>
         <div className="w-64 h-2 bg-marker-green/20 marker-border mx-auto"></div>
       </header>
 
@@ -93,7 +93,7 @@ const SemanticDriftTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <button 
               onClick={handleStart}
               disabled={loading}
-              className="brutalist-button px-12 py-6 text-2xl !bg-marker-green/10 !border-marker-green !text-marker-green hover:!bg-marker-green hover:!text-white"
+              className="brutalist-button px-12 py-6 !text-2xl !bg-marker-green/10 !border-marker-green !text-marker-green hover:!bg-marker-green hover:!text-white"
             >
               {loading ? 'Calibrating Lexicon...' : 'Begin Assessment'}
             </button>
@@ -108,7 +108,7 @@ const SemanticDriftTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
              </div>
 
              <div className="space-y-6">
-               <h3 className="heading-marker text-7xl text-marker-black mb-6">{questions[currentIndex].word}</h3>
+               <h3 className="heading-marker text-6xl text-marker-black mb-6">{questions[currentIndex].word}</h3>
                <p className="handwritten text-2xl text-marker-black/80 font-bold italic"><GlossaryTerm word="Meaning">{questions[currentIndex].question}</GlossaryTerm></p>
              </div>
 
@@ -159,12 +159,12 @@ const SemanticDriftTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <div className="text-center space-y-12 animate-in zoom-in-95 duration-500 w-full max-w-2xl">
              <div className="space-y-4">
                <span className="handwritten text-sm text-marker-black opacity-40 uppercase tracking-widest">Assessment Complete</span>
-               <h3 className="heading-marker text-8xl text-marker-black">{score} / {questions.length}</h3>
+               <h3 className="heading-marker text-6xl text-marker-black">{score} / {questions.length}</h3>
              </div>
 
              <div className="p-10 marker-border border-marker-green bg-white shadow-xl">
                 <span className="handwritten text-sm font-bold uppercase text-marker-green tracking-widest block mb-4"><GlossaryTerm word="Lexicon">Linguistic Literacy</GlossaryTerm> Rank</span>
-                <p className="heading-marker text-5xl text-marker-black lowercase">{getRank(score, questions.length)}</p>
+                <p className="heading-marker text-4xl text-marker-black lowercase">{getRank(score, questions.length)}</p>
              </div>
 
              <button onClick={() => setGameState('intro')} className="handwritten text-xl underline decoration-2 underline-offset-4 decoration-marker-green/40 hover:decoration-marker-green hover:text-marker-green transition-all">

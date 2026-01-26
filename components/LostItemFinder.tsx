@@ -52,36 +52,38 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const isCenter = angle === -1;
 
     return (
-      <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
-        {/* Outer Ring */}
-        <svg viewBox="0 0 100 100" className="w-full h-full absolute animate-[spin_60s_linear_infinite]">
-          <circle cx="50" cy="50" r="48" fill="none" stroke="var(--marker-black)" strokeWidth="0.5" strokeDasharray="4 2" opacity="0.3" />
-          <text x="50" y="8" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">N</text>
-          <text x="92" y="52" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">E</text>
-          <text x="50" y="96" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">S</text>
-          <text x="8" y="52" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">W</text>
-        </svg>
+      <div className="flex flex-col items-center gap-8">
+        <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+          {/* Outer Ring */}
+          <svg viewBox="0 0 100 100" className="w-full h-full absolute animate-[spin_60s_linear_infinite]">
+            <circle cx="50" cy="50" r="48" fill="none" stroke="var(--marker-black)" strokeWidth="0.5" strokeDasharray="4 2" opacity="0.3" />
+            <text x="50" y="8" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">N</text>
+            <text x="92" y="52" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">E</text>
+            <text x="50" y="96" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">S</text>
+            <text x="8" y="52" textAnchor="middle" fontSize="6" fill="var(--marker-black)" opacity="0.5">W</text>
+          </svg>
 
-        {/* The Needle or Target */}
-        {isCenter ? (
-           <div className="relative z-10 animate-pulse">
-             <div className="text-6xl">🎯</div>
-           </div>
-        ) : (
-           <div 
-             className="relative z-10 transition-transform duration-1000 ease-out"
-             style={{ transform: `rotate(${angle}deg)` }}
-           >
-             {/* Needle Graphic */}
-             <svg width="20" height="140" viewBox="0 0 20 140">
-               <path d="M10 0 L20 70 L10 140 L0 70 Z" fill="var(--marker-blue)" />
-               <circle cx="10" cy="70" r="3" fill="white" />
-             </svg>
-           </div>
-        )}
+          {/* The Needle or Target */}
+          {isCenter ? (
+             <div className="relative z-10 animate-pulse">
+               <div className="text-6xl">🎯</div>
+             </div>
+          ) : (
+             <div 
+               className="relative z-10 transition-transform duration-1000 ease-out"
+               style={{ transform: `rotate(${angle}deg)` }}
+             >
+               {/* Needle Graphic */}
+               <svg width="20" height="140" viewBox="0 0 20 140">
+                 <path d="M10 0 L20 70 L10 140 L0 70 Z" fill="var(--marker-blue)" />
+                 <circle cx="10" cy="70" r="3" fill="white" />
+               </svg>
+             </div>
+          )}
+        </div>
         
         {/* Label */}
-        <div className="absolute -bottom-16 text-center">
+        <div className="text-center">
            <div className="heading-marker text-3xl text-marker-blue">{directionLabel}</div>
            <div className="handwritten text-sm opacity-60 uppercase tracking-widest">Calculated Vector</div>
         </div>
@@ -101,7 +103,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       {/* Header */}
       <header className="w-full text-center space-y-4 mb-12">
         <h2 className="heading-marker text-6xl text-marker-purple lowercase"><GlossaryTerm word="Numerology">Numerology</GlossaryTerm> Locator</h2>
-        <p className="handwritten text-xl text-marker-purple opacity-60">Lost Item Recovery Engine</p>
+        <p className="handwritten text-lg text-marker-purple opacity-60">Lost Item Recovery Engine</p>
         <div className="w-full h-px bg-marker-black/10 marker-border mt-8"></div>
       </header>
 
@@ -114,7 +116,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                <input 
                  type="text" 
                  placeholder="e.g. Silver Ring"
-                 className="w-full p-4 text-xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
+                 className="w-full p-4 text-2xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
                  value={inputs.itemName}
                  onChange={e => setInputs({...inputs, itemName: e.target.value})}
                />
@@ -122,7 +124,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
              <div className="space-y-2">
                <label className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-widest ml-1">Type of Item</label>
                <select 
-                 className="w-full p-4 text-xl marker-border bg-white/50 focus:border-marker-purple outline-none"
+                 className="w-full p-4 text-2xl marker-border bg-white/50 focus:border-marker-purple outline-none"
                  value={inputs.itemType}
                  onChange={e => setInputs({...inputs, itemType: e.target.value})}
                >
@@ -136,7 +138,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                <label className="handwritten text-xs text-marker-black opacity-40 uppercase tracking-widest ml-1">Date Lost</label>
                <input 
                  type="date" 
-                 className="w-full p-4 text-xl marker-border bg-white/50 focus:border-marker-purple outline-none"
+                 className="w-full p-4 text-2xl marker-border bg-white/50 focus:border-marker-purple outline-none"
                  value={inputs.dateLost}
                  onChange={e => setInputs({...inputs, dateLost: e.target.value})}
                />
@@ -146,7 +148,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                <input 
                  type="text" 
                  placeholder="Your Name"
-                 className="w-full p-4 text-xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
+                 className="w-full p-4 text-2xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
                  value={inputs.seekerName}
                  onChange={e => setInputs({...inputs, seekerName: e.target.value})}
                />
@@ -158,7 +160,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <input 
               type="text" 
               placeholder="e.g. On the kitchen counter..."
-              className="w-full p-4 text-xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
+              className="w-full p-4 text-2xl marker-border bg-white/50 focus:border-marker-purple outline-none placeholder:opacity-30"
               value={inputs.lastSeen}
               onChange={e => setInputs({...inputs, lastSeen: e.target.value})}
             />
@@ -178,7 +180,7 @@ const LostItemFinder: React.FC<{ onBack: () => void }> = ({ onBack }) => {
              <button 
                onClick={handleCalculate}
                disabled={!inputs.itemName}
-               className="brutalist-button !py-4 !px-8 !text-xl shadow-lg border-marker-purple disabled:opacity-50 disabled:cursor-not-allowed"
+               className="brutalist-button !py-4 !px-8 !text-2xl shadow-lg border-marker-purple disabled:opacity-50 disabled:cursor-not-allowed"
              >
                Triangulate Location
              </button>

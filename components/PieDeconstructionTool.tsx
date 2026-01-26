@@ -4,6 +4,7 @@ import { getPieDeconstruction } from '../services/geminiService';
 import { GlossaryTerm } from './GlossaryEngine';
 import { logCalculation } from '../services/dbService';
 import { useSyllabusStore } from '../store';
+import { ReadAloudButton } from './ReadAloudButton';
 
 const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [word, setWord] = useState('');
@@ -37,7 +38,7 @@ const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => 
         <div className="flex-1 w-full space-y-12">
            <header className="space-y-2">
              <h2 className="heading-marker text-6xl text-marker-blue lowercase"><GlossaryTerm word="Root">Root Analysis</GlossaryTerm></h2>
-             <p className="handwritten text-xl text-marker-blue opacity-60">Tracing the <GlossaryTerm word="Semantic">semantic</GlossaryTerm> trace</p>
+             <p className="handwritten text-lg text-marker-blue opacity-60">Tracing the <GlossaryTerm word="Semantic">semantic</GlossaryTerm> trace</p>
            </header>
            
            <div className="space-y-10">
@@ -46,7 +47,7 @@ const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => 
                <input 
                   type="text" 
                   placeholder="Subject Word..."
-                  className="w-full p-8 text-marker-black text-4xl md:text-5xl shadow-sm italic uppercase placeholder:opacity-20"
+                  className="w-full p-8 text-marker-black text-2xl shadow-sm italic uppercase placeholder:opacity-20"
                   value={word}
                   onChange={(e) => setWord(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleDeconstruction()}
@@ -79,11 +80,18 @@ const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 
                 <div className="p-8 md:p-12 marker-border border-marker-black bg-white/40 shadow-xl relative group">
                    <div className="absolute top-4 right-4 handwritten text-sm text-marker-red font-bold uppercase tracking-widest"><GlossaryTerm word="Root">Primary Root</GlossaryTerm></div>
-                   <div className="handwritten text-sm text-marker-black/30 uppercase mb-2 italic">Ancient Form</div>
-                   <div className="text-7xl md:text-8xl heading-marker text-marker-black leading-none mb-6 group-hover:scale-105 transition-transform">*{result.pieRoot}</div>
+                   <div className="flex items-center gap-3 mb-2">
+                      <div className="handwritten text-sm text-marker-black/30 uppercase italic">Ancient Form</div>
+                      <ReadAloudButton 
+                        text={result.pronunciation || result.pieRoot} 
+                        label="Pronounce"
+                        className="!py-1 !px-2 !text-xs bg-marker-black/5 border-marker-black/10 text-marker-black/60 hover:text-marker-black" 
+                      />
+                   </div>
+                   <div className="text-6xl md:text-7xl heading-marker text-marker-black leading-none mb-6 group-hover:scale-105 transition-transform">*{result.pieRoot}</div>
                    <div className="p-6 marker-border border-marker-blue border-opacity-10 bg-white/30">
                       <span className="handwritten text-sm text-marker-blue font-bold uppercase tracking-widest block mb-2 italic"><GlossaryTerm word="Origin">Original Intent</GlossaryTerm></span>
-                      <p className="handwritten text-2xl md:text-3xl text-marker-black/80 italic">"{result.rootMeaning}"</p>
+                      <p className="handwritten text-2xl text-marker-black/80 italic">"{result.rootMeaning}"</p>
                    </div>
                 </div>
 
@@ -102,7 +110,7 @@ const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => 
                         <div className="w-10 h-10 flex items-center justify-center handwritten text-xs text-marker-black/30 font-bold shrink-0 uppercase">END</div>
                         <div className="flex-grow p-8 marker-border border-marker-blue bg-white/40 shadow-2xl relative">
                            <span className="handwritten text-sm text-marker-blue font-bold uppercase tracking-widest block mb-2 italic">Modern Result</span>
-                           <p className="heading-marker text-4xl md:text-5xl text-marker-black leading-tight lowercase">{result.modernConcept}</p>
+                           <p className="heading-marker text-4xl text-marker-black leading-tight lowercase">{result.modernConcept}</p>
                         </div>
                       </div>
                    </div>
@@ -110,7 +118,7 @@ const PieDeconstructionTool: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 
                 <div className="p-10 md:p-12 marker-border border-marker-red bg-white/40 text-marker-black shadow-xl group">
                    <div className="handwritten text-sm font-bold uppercase tracking-widest border-b-2 border-marker-red/10 pb-4 mb-6 italic text-marker-red">Philosophical Implication</div>
-                   <p className="handwritten text-3xl md:text-4xl font-medium leading-relaxed italic lowercase group-hover:translate-x-2 transition-transform">
+                   <p className="handwritten text-3xl font-medium leading-relaxed italic lowercase group-hover:translate-x-2 transition-transform">
                       "{result.esotericImplication}"
                    </p>
                 </div>

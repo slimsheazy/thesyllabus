@@ -129,8 +129,8 @@ const Archive: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
       <div className="w-full">
         <header className="mb-12 md:mb-20 text-center space-y-4">
-          <h1 className="title-main !text-6xl md:!text-9xl mb-4 font-bold text-marker-blue">the <GlossaryTerm word="Archive">archive</GlossaryTerm></h1>
-          <div className="inline-block handwritten text-xl text-marker-blue opacity-60 italic">Open Source <GlossaryTerm word="Esoteric">Esoteric</GlossaryTerm> <GlossaryTerm word="Repository">Repository</GlossaryTerm></div>
+          <h1 className="title-main text-6xl mb-4 font-bold text-marker-blue">the <GlossaryTerm word="Archive">archive</GlossaryTerm></h1>
+          <div className="inline-block handwritten text-lg text-marker-blue opacity-60 italic">Open Source <GlossaryTerm word="Esoteric">Esoteric</GlossaryTerm> <GlossaryTerm word="Repository">Repository</GlossaryTerm></div>
           <div className="w-full h-0.5 bg-marker-black/10 marker-border mt-4"></div>
         </header>
 
@@ -146,7 +146,7 @@ const Archive: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <div className="absolute top-4 right-4 handwritten text-sm opacity-20 uppercase tracking-widest">{res.category}</div>
               <div className="flex flex-col items-start gap-2">
                 <span className="handwritten text-sm font-bold uppercase tracking-[0.3em]" style={{ color: res.color }}>entry {idx + 1}</span>
-                <span className="heading-marker text-3xl md:text-4xl text-marker-black leading-tight lowercase group-hover:text-marker-blue transition-colors">{res.title}</span>
+                <span className="heading-marker text-2xl text-marker-black leading-tight lowercase group-hover:text-marker-blue transition-colors">{res.title}</span>
               </div>
             </a>
           ))}
@@ -154,13 +154,13 @@ const Archive: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
         <div className="mt-20 md:mt-24 flex justify-center pb-32">
            <div className="p-8 md:p-16 max-w-4xl w-full text-center marker-border border-marker-black bg-white/40 shadow-xl relative group">
-              <p className="heading-marker text-3xl md:text-5xl italic mb-8 md:mb-10 leading-snug lowercase tracking-tight group-hover:scale-102 transition-transform">
+              <p className="heading-marker text-4xl italic mb-8 md:mb-10 leading-snug lowercase tracking-tight group-hover:scale-102 transition-transform">
                 "the <GlossaryTerm word="Future">future</GlossaryTerm> belongs to those who can <GlossaryTerm word="Decode">decode</GlossaryTerm> the hidden world."
               </p>
               <button 
                 onClick={handleContribute}
                 disabled={isSubmitting}
-                className="brutalist-button w-full py-6 md:py-8 text-xl md:text-2xl"
+                className="brutalist-button w-full py-6 md:py-8 !text-2xl"
               >
                 {isSubmitting ? "Uploading research..." : "Submit Research →"}
               </button>

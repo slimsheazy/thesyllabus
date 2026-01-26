@@ -41,7 +41,8 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
   const radius = size * 0.4;
 
   const getPos = (degree: number, rOffset: number = 0) => {
-    const angle = (degree - ascendant) * (Math.PI / 180);
+    // Add Math.PI (180 degrees) to rotate 0 position from 3 o'clock (Right) to 9 o'clock (Left)
+    const angle = ((degree - ascendant) * (Math.PI / 180)) + Math.PI;
     return {
       x: center + (radius + rOffset) * Math.cos(angle),
       y: center + (radius + rOffset) * Math.sin(angle)
@@ -51,20 +52,12 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
   return (
     <div className="relative w-full max-w-[360px] aspect-square flex items-center justify-center p-4">
       <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${size} ${size}`}>
-        <defs>
-          <filter id="marker-wiggle">
-            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
-          </filter>
-        </defs>
-
         {/* Outer Ring */}
         <circle 
           cx={center} cy={center} r={radius} 
           fill="none" stroke="var(--marker-black)" 
-          strokeWidth="3" strokeDasharray="8,4" 
+          strokeWidth="4" strokeDasharray="8,4" 
           opacity="0.5" 
-          style={{ filter: 'url(#marker-wiggle)' }}
         />
         
         {/* Aspect Lines */}
@@ -99,7 +92,7 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
 
         {/* House Cusps */}
         {[...Array(12)].map((_, i) => {
-          const angle = (i * 30 - ascendant) * (Math.PI / 180);
+          const angle = ((i * 30 - ascendant) * (Math.PI / 180)) + Math.PI;
           const x2 = center + radius * Math.cos(angle);
           const y2 = center + radius * Math.sin(angle);
           return (
@@ -116,7 +109,7 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
         {/* House Numbers */}
         {[...Array(12)].map((_, i) => {
           // Equal House System: House 1 starts at 0° relative to Asc, so center is 15°
-          const angle = ((i * 30 + 15) - ascendant) * (Math.PI / 180);
+          const angle = (((i * 30 + 15) - ascendant) * (Math.PI / 180)) + Math.PI;
           const rNum = radius * 0.75;
           const x = center + rNum * Math.cos(angle);
           const y = center + rNum * Math.sin(angle);
@@ -138,7 +131,7 @@ const ChartWheel: React.FC<{ ascendant: number, planets: any[], aspects: any[] }
 
         {/* Planets and Glyphs */}
         {planets.map((p, i) => {
-          const angle = (p.degree - ascendant) * (Math.PI / 180);
+          const angle = ((p.degree - ascendant) * (Math.PI / 180)) + Math.PI;
           const x = center + (radius - 18) * Math.cos(angle);
           const y = center + (radius - 18) * Math.sin(angle);
           return (
@@ -238,8 +231,8 @@ const HoraryTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <div className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
         <div className="flex-1 w-full space-y-12">
            <header className="space-y-4">
-             <h2 className="heading-marker text-7xl text-marker-blue lowercase"><GlossaryTerm word="Horary">Horary</GlossaryTerm> Moment</h2>
-             <p className="handwritten text-2xl text-marker-blue font-black uppercase tracking-widest">Insight into the current snapshot</p>
+             <h2 className="heading-marker text-6xl text-marker-blue lowercase"><GlossaryTerm word="Horary">Horary</GlossaryTerm> Moment</h2>
+             <p className="handwritten text-lg text-marker-blue font-black uppercase tracking-widest">Insight into the current snapshot</p>
            </header>
            
            <div className="space-y-8">
@@ -247,7 +240,7 @@ const HoraryTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                value={question}
                onChange={(e) => setQuestion(e.target.value)}
                placeholder="Enter your inquiry..."
-               className="w-full p-8 md:p-10 text-marker-black text-3xl md:text-4xl shadow-sm italic font-black placeholder:opacity-30 border-marker-black/20 focus:border-marker-blue/40 transition-colors bg-white/50"
+               className="w-full p-8 md:p-10 text-marker-black text-2xl shadow-sm italic font-black placeholder:opacity-30 border-marker-black/20 focus:border-marker-blue/40 transition-colors bg-white/50"
              />
              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end border-t-4 border-marker-black/10 pt-6 gap-4">
                 <div className="space-y-2 w-full sm:w-auto">
@@ -295,7 +288,7 @@ const HoraryTool: React.FC<{ onBack: () => void }> = ({ onBack }) => {
            <button 
              disabled={loading}
              onClick={handleCast}
-             className="brutalist-button w-full !py-8 !text-3xl shadow-xl"
+             className="brutalist-button w-full !py-8 !text-2xl shadow-xl"
            >
              {loading ? 'Analyzing...' : 'Execute Inquiry'}
            </button>
