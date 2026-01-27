@@ -1,14 +1,14 @@
-
+// @ts-ignore
 import initSqlJs from 'https://esm.sh/sql.js@1.13.0';
 
-let db: any = null;
+let db = null;
 
-const init = async (data: Uint8Array | null) => {
+const init = async (data) => {
   const wasmUrl = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/sql-wasm.wasm';
   const wasmResponse = await fetch(wasmUrl);
   const wasmBinary = await wasmResponse.arrayBuffer();
   
-  const initFn = typeof initSqlJs === 'function' ? initSqlJs : (initSqlJs as any).default;
+  const initFn = typeof initSqlJs === 'function' ? initSqlJs : initSqlJs.default;
   const SQL = await initFn({ wasmBinary });
   
   if (data) {
@@ -27,7 +27,7 @@ const init = async (data: Uint8Array | null) => {
   }
 };
 
-self.onmessage = async (e: MessageEvent) => {
+self.onmessage = async (e) => {
   const { id, type, payload } = e.data;
   
   try {
@@ -60,9 +60,9 @@ self.onmessage = async (e: MessageEvent) => {
         const logs = [];
         if (res.length > 0) {
            const columns = res[0].columns;
-           logs.push(...res[0].values.map((row: any) => {
-              const obj: any = {};
-              columns.forEach((col: string, i: number) => {
+           logs.push(...res[0].values.map((row) => {
+              const obj = {};
+              columns.forEach((col, i) => {
                 obj[col] = row[i];
               });
               return obj;
@@ -71,7 +71,7 @@ self.onmessage = async (e: MessageEvent) => {
         self.postMessage({ id, type: 'SUCCESS', payload: logs });
         break;
     }
-  } catch (error: any) {
+  } catch (error) {
     self.postMessage({ id, type: 'ERROR', error: error.message });
   }
 };

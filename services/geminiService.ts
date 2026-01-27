@@ -10,7 +10,13 @@ const MODELS = {
   TTS: 'gemini-2.5-flash-preview-tts'
 };
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = import.meta.env.VITE_API_KEY;
+
+if (!apiKey) {
+  console.error("Missing VITE_API_KEY in environment variables. AI features will fail.");
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey || '' });
 
 // --- Helper: Generic JSON Generator ---
 async function generateJson<T>(model: string, prompt: string, schema: any): Promise<T | null> {

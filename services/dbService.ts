@@ -1,82 +1,52 @@
 
-const WORKER_CODE = `
-import initSqlJs from 'https://esm.sh/sql.js@1.13.0';
+import DB_WORKER_URL from './dbWorker.ts?worker&url';
 
-let db = null;
+// --- IndexedDB Helper ---
+const IDB_NAME = 'SyllabusDB';
+const IDB_STORE = 'sqlite_store';
+const IDB_KEY = 'db_file';
 
-const init = async (data) => {
-  const wasmUrl = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/sql-wasm.wasm';
-  const wasmResponse = await fetch(wasmUrl);
-  const wasmBinary = await wasmResponse.arrayBuffer();
-  
-  const initFn = typeof initSqlJs === 'function' ? initSqlJs : initSqlJs.default;
-  const SQL = await initFn({ wasmBinary });
-  
-  if (data) {
-    db = new SQL.Database(data);
-  } else {
-    db = new SQL.Database();
-    db.run(\`
-      CREATE TABLE IF NOT EXISTS logs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        module TEXT,
-        query TEXT,
-        result TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    \`);
-  }
+const idbSave = (data: Uint8Array) => {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+      const db = (e.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE);
+      }
+    };
+    req.onsuccess = (e) => {
+      const db = (e.target as IDBOpenDBRequest).result;
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).put(data, IDB_KEY);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    };
+    req.onerror = () => reject(req.error);
+  });
 };
 
-self.onmessage = async (e) => {
-  const { id, type, payload } = e.data;
-  
-  try {
-    switch (type) {
-      case 'INIT':
-        await init(payload);
-        self.postMessage({ id, type: 'SUCCESS' });
-        break;
-        
-      case 'LOG':
-        if (!db) throw new Error("DB not initialized");
-        db.run("INSERT INTO logs (module, query, result) VALUES (?, ?, ?)", [payload.module, payload.query, payload.result]);
-        
-        // Export for persistence
-        const binary = db.export();
-        // Send persist message separately
-        self.postMessage({ type: 'PERSIST', payload: binary });
-        self.postMessage({ id, type: 'SUCCESS' });
-        break;
-        
-      case 'GET':
-        if (!db) throw new Error("DB not initialized");
-        let res;
-        if (payload.module) {
-          res = db.exec("SELECT * FROM logs WHERE module = ? ORDER BY timestamp DESC", [payload.module]);
-        } else {
-          res = db.exec("SELECT * FROM logs ORDER BY timestamp DESC");
-        }
-        
-        const logs = [];
-        if (res.length > 0) {
-           const columns = res[0].columns;
-           logs.push(...res[0].values.map((row) => {
-              const obj = {};
-              columns.forEach((col, i) => {
-                obj[col] = row[i];
-              });
-              return obj;
-           }));
-        }
-        self.postMessage({ id, type: 'SUCCESS', payload: logs });
-        break;
-    }
-  } catch (error) {
-    self.postMessage({ id, type: 'ERROR', error: error.message });
-  }
-};
-`;
+const idbLoad = (): Promise<Uint8Array | null> => {
+   return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+       const db = (e.target as IDBOpenDBRequest).result;
+       if (!db.objectStoreNames.contains(IDB_STORE)) {
+         db.createObjectStore(IDB_STORE);
+       }
+    };
+    req.onsuccess = (e) => {
+      const db = (e.target as IDBOpenDBRequest).result;
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const getReq = tx.objectStore(IDB_STORE).get(IDB_KEY);
+      getReq.onsuccess = () => resolve(getReq.result || null);
+      getReq.onerror = () => reject(getReq.error);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// --- Worker Setup ---
 
 let worker: Worker | null = null;
 let initPromise: Promise<void> | null = null;
@@ -89,20 +59,16 @@ export const initDB = async () => {
 
   initPromise = new Promise(async (resolve, reject) => {
     try {
-      // Create worker from Blob to avoid URL resolution issues with import.meta.url
-      const blob = new Blob([WORKER_CODE], { type: 'application/javascript' });
-      const workerUrl = URL.createObjectURL(blob);
-      worker = new Worker(workerUrl, { type: 'module' });
+      // Use Vite's worker import
+      worker = new Worker(DB_WORKER_URL, { type: 'module' });
       
-      worker.onmessage = (e) => {
+      worker.onmessage = async (e) => {
         const { id, type, payload, error } = e.data;
         
         if (type === 'PERSIST') {
-          // Handle persistence independently of request/response cycle
           try {
-             // payload is Uint8Array
-             const arr = Array.from(payload as Uint8Array);
-             localStorage.setItem('syllabus_sqlite_db', JSON.stringify(arr));
+             await idbSave(payload as Uint8Array);
+             // console.log("DB Persisted to IndexedDB");
           } catch (err) {
             console.error("Failed to persist DB from worker:", err);
           }
@@ -117,15 +83,12 @@ export const initDB = async () => {
         }
       };
 
-      // Load data from localStorage
-      const savedDb = localStorage.getItem('syllabus_sqlite_db');
+      // Load data from IndexedDB
       let data = null;
-      if (savedDb) {
-        try {
-          data = new Uint8Array(JSON.parse(savedDb));
-        } catch (e) {
-          console.error("Corrupt local DB, resetting.");
-        }
+      try {
+        data = await idbLoad();
+      } catch (e) {
+        console.error("Failed to load local DB, resetting.", e);
       }
 
       // Send INIT
