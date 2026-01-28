@@ -813,3 +813,34 @@ export const getRelocationAnalysis = async (birthDate: string, birthTime: string
     required: ["angles", "dominantInfluence", "vibeCheck", "themes"]
   });
 };
+
+export const getDeckRecommendation = async (profile: string, scores: Record<string, number>) => {
+  const prompt = `
+    You are an expert on divinatory tools, tarot decks, and oracle systems.
+    Based on the user's resonance profile: "${profile}" and their scores: ${JSON.stringify(scores)},
+    recommend the SINGLE most aligned divinatory deck (Tarot, Oracle, or Lenormand).
+
+    Provide:
+    - deckName: The full name of the deck.
+    - creator: The artist/author of the deck.
+    - description: A poetic, esoteric description of the deck's energy.
+    - whyMatch: A specific explanation of why it matches their profile.
+    - keyThemes: 3-5 short thematic keywords.
+    - whereToFind: General guidance on where to acquire it (e.g., "Mainstream publishers", "Indie through the artist's site").
+
+    Output in strictly validated JSON.
+  `;
+
+  return generateJson(MODELS.PRO, prompt, {
+    type: Type.OBJECT,
+    properties: {
+      deckName: { type: Type.STRING },
+      creator: { type: Type.STRING },
+      description: { type: Type.STRING },
+      whyMatch: { type: Type.STRING },
+      keyThemes: { type: Type.ARRAY, items: { type: Type.STRING } },
+      whereToFind: { type: Type.STRING }
+    },
+    required: ["deckName", "creator", "description", "whyMatch", "keyThemes", "whereToFind"]
+  });
+};
