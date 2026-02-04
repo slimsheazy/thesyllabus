@@ -26,6 +26,7 @@ const BirthChartTool = React.lazy(() => import('./components/BirthChartTool'));
 const TarotTool = React.lazy(() => import('./components/TarotTool'));
 const AstroMapTool = React.lazy(() => import('./components/AstroMapTool'));
 const LostItemFinder = React.lazy(() => import('./components/LostItemFinder'));
+const DeckSelector = React.lazy(() => import('./components/DeckSelector'));
 
 // --- Configuration ---
 
@@ -40,6 +41,7 @@ const MENU_CATEGORIES = [
       { name: "Charm Caster", page: Page.CHARM_CASTING },
       { name: "Lost Item Locator", page: Page.LOST_ITEM_FINDER },
       { name: "Friendship Matrix", page: Page.FRIENDSHIP_MATRIX },
+      { name: "Deck Matcher", page: Page.DECK_SELECTOR },
     ]
   },
   {
@@ -95,7 +97,8 @@ const TOOL_COMPONENTS: Partial<Record<Page, React.ComponentType<{ onBack: () => 
   [Page.BIRTH_CHART]: BirthChartTool,
   [Page.ASTRO_MAP]: AstroMapTool,
   [Page.LOST_ITEM_FINDER]: LostItemFinder,
-  [Page.TAROT]: TarotTool
+  [Page.TAROT]: TarotTool,
+  [Page.DECK_SELECTOR]: DeckSelector
 };
 
 const SYLLABUS_WORDS = [
